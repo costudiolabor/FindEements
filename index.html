@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск по таблице компонентов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+        .search-input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            width: 300px;
+        }
+        .search-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .search-button:hover {
+            background-color: #45a049;
+        }
+        .results-info {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+        .highlight {
+            background-color: #ffff99;
+            font-weight: bold;
+        }
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+        .column-header {
+            font-weight: bold;
+            text-align: center;
+            background-color: #e8f5e8;
+            padding: 5px;
+        }
+        .row-header {
+            font-weight: bold;
+            background-color: #e8f5e8;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .search-container {
+                flex-direction: column;
+                width: 100%;
+            }
+            .search-input {
+                width: 100%;
+            }
+            table {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Поиск по таблице компонентов</h1>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Введите название для поиска...">
+            <button class="search-button" onclick="searchTable()">Найти</button>
+        </div>
+        
+        <div id="resultsInfo" class="results-info"></div>
+        
+        <div class="table-container">
+            <table id="componentsTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="column-header">1</th>
+                        <th class="column-header">2</th>
+                        <th class="column-header">3</th>
+                        <th class="column-header">4</th>
+                        <th class="column-header">5</th>
+                        <th class="column-header">6</th>
+                        <th class="column-header">7</th>
+                        <th class="column-header">8</th>
+                        <th class="column-header">9</th>
+                        <th class="column-header">10</th>
+                        <th class="column-header">11</th>
+                        <th class="column-header">12</th>
+                        <th class="column-header">13</th>
+                        <th class="column-header">14</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="row-header">A</td>
+                        <td>GX16 мама 2к на кабель</td>
+                        <td>3.5 и 6.3</td>
+                        <td>3.81-12 RC</td>
+                        <td>MEGA чистые</td>
+                        <td>STEP-UP красн. Mal. XL6019</td>
+                        <td>Датчик линии, удара</td>
+                        <td>Драйвер двигателя</td>
+                        <td>Тумблеры</td>
+                        <td>7-seg 1</td>
+                        <td>SD30NF06, SM6T150A, MFSM2502</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">B</td>
+                        <td>GX16 папа 2к на кабель</td>
+                        <td>DS1010-2 DS1070-3</td>
+                        <td>3.81-12 VC</td>
+                        <td>MEGA прошитые</td>
+                        <td>STEP-UP красн. Бол. STPS2045</td>
+                        <td>Датчик движения</td>
+                        <td>RFID</td>
+                        <td>Диодстики</td>
+                        <td>7-SEG 1 CL8011BH</td>
+                        <td>IRF530S</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">C</td>
+                        <td>GX16 папа 2к на корпус</td>
+                        <td>XT30 на кабель</td>
+                        <td>3.81-12 K</td>
+                        <td>NANO</td>
+                        <td>STEP-UP син. мал. MT3606</td>
+                        <td>Модуль микрофона</td>
+                        <td>Нагреватели</td>
+                        <td>Кнопки большие красн и зел</td>
+                        <td>7-seg 2</td>
+                        <td>STB5SNF06</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">D</td>
+                        <td>GX16 папа и мама 4 контакта на провод</td>
+                        <td>XT30 на плату</td>
+                        <td>3.81-06 RC</td>
+                        <td>Eth W5500</td>
+                        <td>STEP-DOWN син. LM2596</td>
+                        <td>Фоторезистор</td>
+                        <td>Диодстики на резисторах</td>
+                        <td>Сигнальные лампы</td>
+                        <td>7-seg TM1637</td>
+                        <td>SMD</td>
+                        <td>Муфта переходная 8-6, держатель штанги</td>
+                        <td>Толкатель мал</td>
+                        <td>Программатор</td>
+                        <td>БП 12В</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">E</td>
+                        <td>GX12 папа 2к на кабель</td>
+                        <td>XT60 XT90</td>
+                        <td>3.81-06 VC</td>
+                        <td>Eth ENC28J60</td>
+                        <td>STEP-DOWN красн. мал. XL4015</td>
+                        <td>Лазер</td>
+                        <td>Концевик</td>
+                        <td>Антивандальные 19 красн</td>
+                        <td>COL-ROW и кодовые панели</td>
+                        <td>ULN2803</td>
+                        <td>Подшипники, натяжители ремня</td>
+                        <td>Толкатель сред</td>
+                        <td>Адаптер для микропроцессора</td>
+                        <td>БП 19В</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">F</td>
+                        <td>GX12 папа 2к на кабель</td>
+                        <td>IDC-10</td>
+                        <td>3.81-06 K</td>
+                        <td>RPI</td>
+                        <td>STEP-DOWN зел. бол. XL4016</td>
+                        <td>Лазерная указка</td>
+                        <td>ИК приёмник</td>
+                        <td>Антивандальные 19 прочие</td>
+                        <td>Серво</td>
+                        <td></td>
+                        <td>Панельки для микросхем</td>
+                        <td>Толкатель бол</td>
+                        <td>тензодатчик</td>
+                        <td>Вилки 220</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">G</td>
+                        <td>GX12 мама 4к на кабель</td>
+                        <td>BH-10</td>
+                        <td>3.81-04 RC</td>
+                        <td>MP3</td>
+                        <td>STEP-DOWN зел. мал. 1AGCK</td>
+                        <td>RTC</td>
+                        <td>Переменники, ручки для переменников</td>
+                        <td>Антивандальная 12</td>
+                        <td>Диммеры</td>
+                        <td></td>
+                        <td>Направляющие, линейные подшипники</td>
+                        <td>Компасы</td>
+                        <td>Светод. табло</td>
+                        <td>Розетки 220</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">H</td>
+                        <td>GX12 папа 4к на кабель</td>
+                        <td>PLS-40</td>
+                        <td>3.81-04 VC</td>
+                        <td>Усилитель TPA3118</td>
+                        <td>Индукционка</td>
+                        <td>Тач, MPR</td>
+                        <td>1N5406</td>
+                        <td>Коннектор для антивандальных</td>
+                        <td>LED, держатели</td>
+                        <td>Гибкий переход</td>
+                        <td>Провода для шаговых</td>
+                        <td>Актуаторы</td>
+                        <td>Прочие модули</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">I</td>
+                        <td>Бочонки</td>
+                        <td>PBS-40</td>
+                        <td>3.81-04 K</td>
+                        <td>Усилитель урония заряда, BMS, модули TC4056</td>
+                        <td>Индикаторы</td>
+                        <td>MPU6050</td>
+                        <td>Кулера</td>
+                        <td>Кнопка квадратная белая маленькая</td>
+                        <td>C 15000uF 50V</td>
+                        <td>галетник</td>
+                        <td>Ремни и прочее</td>
+                        <td>Шланги, клапаны</td>
+                        <td>Модули InDeStRoom</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">J</td>
+                        <td>RJ45</td>
+                        <td>PLD-40</td>
+                        <td>5.08 все</td>
+                        <td>Динамики мелкие</td>
+                        <td>Аккумуляторы 18650</td>
+                        <td>Модуль 2 реле</td>
+                        <td>Радиаторы</td>
+                        <td>Кнопка круглая бел маленькая</td>
+                        <td>Реле 5В, 12В</td>
+                        <td>Электродвигател и бол</td>
+                        <td>Корпус мал</td>
+                        <td>Насосы</td>
+                        <td>Компоненты (разработка)</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">K</td>
+                        <td>Разъёмы питания 6525 5521</td>
+                        <td>PBD-40</td>
+                        <td>PBD-10</td>
+                        <td>вибродинамики</td>
+                        <td>Держатели и проставки для 18650</td>
+                        <td>модуль 1 реле, реле с таймером</td>
+                        <td>FUSE</td>
+                        <td>Кнопка круглая бол белая</td>
+                        <td>Индикаторы стрелочные нов</td>
+                        <td>Мотор с прямом редуктором</td>
+                        <td>M3</td>
+                        <td>Термоклеевые листолеты</td>
+                        <td>Модуль (разработка)</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">L</td>
+                        <td>USB и прочие</td>
+                        <td>PBS-8</td>
+                        <td>PBD-28</td>
+                        <td>Бузер</td>
+                        <td>БП музей</td>
+                        <td>Реле мощные и панельки</td>
+                        <td>Держатель предохранител и</td>
+                        <td>Кнопка круглая бол красная</td>
+                        <td>Индикаторы стрелочные стар</td>
+                        <td>Мотор с угловым редуктором</td>
+                        <td>Магниты</td>
+                        <td>Провода 2.54</td>
+                        <td>Макетка</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function searchTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const table = document.getElementById('componentsTable');
+            const rows = table.getElementsByTagName('tr');
+            let foundCount = 0;
+            let resultsInfo = document.getElementById('resultsInfo');
+            
+            // Сбросить выделение
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                for (let j = 0; j < cells.length; j++) {
+                    cells[j].classList.remove('highlight');
+                }
+            }
+            
+            if (!searchTerm) {
+                resultsInfo.textContent = '';
+                return;
+            }
+            
+            // Поиск по всем ячейкам
+            for (let i = 1; i < rows.length; i++) { // Начинаем с 1, чтобы пропустить заголовок
+                const cells = rows[i].getElementsByTagName('td');
+                for (let j = 0; j < cells.length; j++) {
+                    const cellText = cells[j].textContent.toLowerCase();
+                    if (cellText.includes(searchTerm)) {
+                        cells[j].classList.add('highlight');
+                        foundCount++;
+                    }
+                }
+            }
+            
+            if (foundCount > 0) {
+                resultsInfo.textContent = `Найдено ${foundCount} совпадений`;
+                resultsInfo.style.color = '#333';
+            } else {
+                resultsInfo.textContent = 'Ничего не найдено';
+                resultsInfo.style.color = '#ff0000';
+            }
+        }
+        
+        // Добавляем обработчик для Enter
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchTable();
+            }
+        });
+    </script>
+</body>
+</html>
+
